@@ -44,8 +44,8 @@ RUN ["/bin/bash", "+h", "-c", "rm -r /etc/mtab && ln -sv /proc/self/mounts /etc/
 
 # create password and group files
 
-ADD passwd /etc/passwd
-ADD group /etc/group
+ADD config/passwd /etc/passwd
+ADD config/group /etc/group
 
 # initialise log files with proper permissions
 
@@ -102,8 +102,8 @@ RUN ["/bin/bash", "+h", "-c", "tar -xf glibc-*.tar.xz -C /tmp/ \
 
 # configure glibc
 
-ADD nsswitch.conf /etc/nsswitch.conf
-ADD ld.so.conf /etc/ld.so.conf
+ADD config/nsswitch.conf /etc/nsswitch.conf
+ADD config/ld.so.conf /etc/ld.so.conf
 RUN ["/bin/bash", "+h", "-c", "mkdir -pv /etc/ld.so.conf.d"]
 
 # tzdata
@@ -364,9 +364,9 @@ RUN rm -rf /tools
 
 # system configuration
 
-ADD init /init
-ADD init2 /init2
-ADD fstab /etc/fstab
+ADD config/init /init
+ADD config/init2 /init2
+ADD config/fstab /etc/fstab
 
 RUN echo root:root | chpasswd
 
