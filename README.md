@@ -14,3 +14,11 @@ Distinguishing features:
 - Docker Engine
 - Node.js
 - < 40MB compressed
+
+## building it
+
+You need to build the toolchain first (link at the top).
+
+Then, populate the sources directory by downloading all the files in `wget-list`.
+
+Finally, run `build.sh`. The container's filesystem itself is the final initramfs image. This script will dump it, extract the kernel and create the `initramfs.xz` file.
