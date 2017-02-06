@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# switch into tmpfs root, leave k's rootfs behind
+mount -t tmpfs -o size=90% tmpfs /mnt
+tar -C / --exclude=mnt -cf - . | tar -C /mnt/ -xf -
+mkdir /mnt/mnt
+exec /sbin/switch_root mnt /init2

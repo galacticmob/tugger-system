@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# do mounts early
+mkdir /dev/pts
+mkdir /dev/shm
+mount -a
+
+# trigger mdev
+mdev -s
+
+# make sure we pass kargs to init
+#exec /usr/bin/node /sbin/init.js `cat /proc/cmdline`
+
+exec /bin/sh
