@@ -367,6 +367,7 @@ RUN rm -rf /tools
 ADD config/init /init
 ADD config/init2 /init2
 ADD config/fstab /etc/fstab
+ADD config/os-release /etc/os-release
 
 RUN echo root:root | chpasswd
 
