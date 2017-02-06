@@ -1,12 +1,11 @@
 #!/bin/sh
 
-# do mounts early
-mkdir /dev/pts
-mkdir /dev/shm
+# do mounts
+mount proc
 mount -a
 
-# trigger mdev
-mdev -s
+# set up loopback interface
+ip link set dev lo up
 
 # make sure we pass kargs to init
 #exec /usr/bin/node /sbin/init.js `cat /proc/cmdline`
