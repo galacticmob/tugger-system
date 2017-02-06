@@ -150,6 +150,11 @@ RUN echo 'int main(){}' > dummy.c \
 
 # build the kernel
 
+ADD sources /sources/
+
+# the kernel requires bc and openssl but leave them in the final
+# system because they are useful and relatively small
+
 RUN ["/bin/bash", "+h", "-c", "tar -xf bc-*.tar.bz2 -C /tmp/ \
     && cd /tmp/bc-* \
     && ./configure --prefix=/tools \
@@ -158,10 +163,24 @@ RUN ["/bin/bash", "+h", "-c", "tar -xf bc-*.tar.bz2 -C /tmp/ \
     && cd /tmp \
     && rm -rf /tmp/bc-*"]
 
+RUN ["/bin/bash", "+h", "-c", "tar -xf openssl-*.tar.gz -C /tmp/ \
+    && cd /tmp/openssl-* \
+    && ./config --prefix=/usr \
+        --openssldir=/etc/ssl \
+        --libdir=lib \
+        shared \
+    && make depend \
+    && make \
+    && make MANDIR=/usr/share/man MANSUFFIX=ssl install \
+    && cd /tmp \
+    && rm -rf /tmp/openssl-*"]
+
+ADD kernel-config /tmp/kernel-config
+
 RUN ["/bin/bash", "+h", "-c", "tar -xf linux-*.tar.xz -C /tmp/ \
     && cd /tmp/linux-* \
     && make mrproper \
-    && make defconfig \
+    && cp /tmp/kernel-config .config \
     && make -j 8 \
     && cp arch/x86/boot/bzImage /vmlinuz \
     && make modules_install \
@@ -173,8 +192,6 @@ RUN ["/bin/bash", "+h", "-c", "tar -xf linux-*.tar.xz -C /tmp/ \
 # the /tools versions, which will be removed at the end of the build process
 
 # now we can continue building the rest of the system
-
-ADD sources /sources/
 
 # busybox
 
@@ -237,6 +254,72 @@ RUN gunzip docker-*.tgz \
     && mv /tmp/docker/docker* /usr/bin/ \
     && rm -rf /tmp/docker
 
+# kmod (busybox modutils will not load lustre correctly)
+
+RUN tar -xf kmod-*.tar.xz -C /tmp/ \
+    && cd /tmp/kmod-* \
+    && ./configure --prefix=/usr \
+            --bindir=/bin \
+            --sysconfdir=/etc \
+            --with-rootlibdir=/lib \
+    && make \
+    && make install \
+    && for target in depmod insmod lsmod modinfo modprobe rmmod; do \
+        ln -sfv ../bin/kmod /sbin/$target \
+    ;done \
+    && ln -sfv kmod /bin/lsmod \
+    && cd /tmp \
+    && rm -rf /tmp/kmod-*
+
+# eudev
+
+# requires gperf and pkg-config (to find kmod)
+
+RUN tar -xf gperf-*.tar.gz -C /tmp/ \
+    && cd /tmp/gperf-* \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/gperf-*
+
+RUN tar -xf pkg-config-*.tar.gz -C /tmp/ \
+    && cd /tmp/pkg-config-* \
+    && ./configure --prefix=/usr \
+            --with-internal-glib       \
+            --disable-compile-warnings \
+            --disable-host-tool        \
+            --docdir=/usr/share/doc/pkg-config-0.29.1 \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/pkg-config-*
+
+RUN tar -xf eudev-*.tar.gz -C /tmp/ \
+    && cd /tmp/eudev-* \
+    && KMOD_CFLAGS="-I/usr/include" \
+    KMOD_LIBS="-L/lib -lkmod" \
+        ./configure --prefix=/ \
+            --bindir=/sbin          \
+            --sbindir=/sbin         \
+            --libdir=/usr/lib       \
+            --sysconfdir=/etc       \
+            --libexecdir=/lib       \
+            --with-rootprefix=/     \
+            --with-rootlibdir=/lib  \
+            --disable-manpages       \
+            --disable-static        \
+            --disable-selinux \
+            --enable-kmod \
+            --disable-blkid \
+            --disable-introspection \
+    && make \
+    && mkdir -pv /lib/udev/rules.d \
+    && mkdir -pv /etc/udev/rules.d \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/eudev-*
+
 # cleaning up the image
 
 RUN rm -f /usr/lib/lib{bfd,opcodes}.a \
@@ -289,3 +372,5 @@ RUN echo root:root | chpasswd
 
 ADD cgroupfs-mount /sbin/cgroupfs-mount
 RUN chmod a+x /sbin/cgroupfs-mount
+
+RUN depmod -a `ls /lib/modules | head -n 1`
