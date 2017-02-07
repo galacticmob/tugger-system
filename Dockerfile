@@ -361,6 +361,10 @@ RUN tar -xf v2_9_0.tar.gz -C /tmp/ \
     && cd /tmp \
     && rm -rf /tmp/lustre-*
 
+# init system
+
+RUN npm install -g init8js@0.0.2
+
 # cleaning up the image
 
 RUN rm -f /usr/lib/lib{bfd,opcodes}.a \

@@ -1,0 +1,8 @@
+---
+
+use_graphics: false
+graphics:
+  message: "Welcome to {bold}tugger{/bold}"
+  copyright: "Bottom text"
+  hidelog: true
+default_path: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

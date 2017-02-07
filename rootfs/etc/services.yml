@@ -1,0 +1,68 @@
+---
+
+mountrw:
+    name: Remount rootfs read-write
+    type: shell
+    exec: "mount -o remount,rw /"
+
+mountfstab:
+    name: Mount devices from /etc/fstab
+    type: shell
+    exec: "mount -a"
+    requires: mountrw
+    provides: filesystem
+
+hostname:
+    name: Set hostname
+    type: shell
+    script: |
+        if [ "$HOSTNAME" = "~auto" ]; then
+            hostname `/bin/genhostname`
+        else
+            hostname $HOSTNAME
+        fi
+    env:
+        HOSTNAME: ~auto
+    requires: filesystem
+
+udev:
+    type: daemon
+    exec: "/sbin/udevd --debug"
+    requires: filesystem, hostname
+
+cgroups:
+    type: shell
+    exec: "cgroupfs-mount"
+    requires: mountrw
+
+udevtrigger:
+    name: Synthesizing the initial hotplug events
+    type: shell
+    exec: "udevadm trigger"
+    requires: udev
+
+udevsettle:
+    name: Wait for devices to settle
+    type: shell
+    exec: "udevadm settle"
+    requires: udevtrigger
+    provides: devices
+
+tty2:
+    type: daemon
+    exec: "/sbin/getty 38400 tty2"
+    restart_limit: -1
+    requires: devices
+
+tty3:
+    type: daemon
+    exec: "/sbin/getty 38400 tty3"
+    restart_limit: -1
+    requires: devices
+
+dockerd:
+    type: daemon
+    exec: "/usr/bin/dockerd"
+    requires: cgroups, devices
+    env:
+        DOCKER_RAMDISK: true
