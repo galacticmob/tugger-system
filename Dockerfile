@@ -365,6 +365,10 @@ RUN tar -xf v2_9_0.tar.gz -C /tmp/ \
 
 RUN npm install -g init8js@0.0.2
 
+# the example API middleware
+
+RUN npm install -g tugger-service@0.0.2
+
 # cleaning up the image
 
 RUN rm -f /usr/lib/lib{bfd,opcodes}.a \
