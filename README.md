@@ -6,13 +6,14 @@ Unless you want to rebuild the system from source, you are probably looking to d
 
 ## what is tugger
 
-`tugger` is a not-very-opinionated, minimal datacentre OS. It provides only a container runtime and basic system initialisation services. It does not provide any management middleware, instead, you are expected to roll your own using Node.js.
+`tugger` is a less-opinionated, minimal datacentre OS. It provides only a container runtime and basic system initialisation services. It does not provide any management middleware, instead, you are expected to roll your own using Node.js.
 
 Distinguishing features:
 
 - longterm kernel (currently 4.4.47)
 - Docker Engine
 - Node.js
+- Lustre parallel filesystem client
 - < 40MB compressed
 
 ## building it

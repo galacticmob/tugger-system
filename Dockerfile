@@ -318,6 +318,49 @@ RUN tar -xf eudev-*.tar.gz -C /tmp/ \
     && cd /tmp \
     && rm -rf /tmp/eudev-*
 
+# lustre-utils
+
+# lustre requires automake, autoconf and libtool - add them to /tools
+
+RUN tar -xf libtool-*.tar.xz -C /tmp/ \
+    && cd /tmp/libtool-* \
+    && ./configure --prefix=/tools \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/libtool-*
+
+RUN tar -xf autoconf-*.tar.xz -C /tmp/ \
+    && cd /tmp/autoconf-* \
+    && ./configure --prefix=/tools \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/autoconf-*
+
+RUN tar -xf automake-*.tar.xz -C /tmp/ \
+    && cd /tmp/automake-* \
+    && ./configure --prefix=/tools \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/automake-*
+
+RUN tar -xf v2_9_0.tar.gz -C /tmp/ \
+    && cd /tmp/lustre-* \
+    && sh autogen.sh \
+    && ./configure --prefix=/usr \
+        --disable-server \
+        --disable-modules \
+        --disable-client \
+        --disable-tests \
+        --disable-manpages \
+    && make undef.h \
+    && make CFLAGS=-Wno-error \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/lustre-*
+
 # cleaning up the image
 
 RUN rm -f /usr/lib/lib{bfd,opcodes}.a \
