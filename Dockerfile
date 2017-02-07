@@ -42,10 +42,10 @@ RUN ["/tools/bin/bash", "+h", "-c", "ln -sv /tools/bin/{bash,cat,echo,pwd,stty} 
 
 RUN ["/bin/bash", "+h", "-c", "rm -r /etc/mtab && ln -sv /proc/self/mounts /etc/mtab"]
 
-# create password and group files
+# create password and group files early for tests
 
-ADD config/passwd /etc/passwd
-ADD config/group /etc/group
+ADD rootfs/etc/passwd /etc/passwd
+ADD rootfs/etc/group /etc/group
 
 # initialise log files with proper permissions
 
@@ -102,8 +102,6 @@ RUN ["/bin/bash", "+h", "-c", "tar -xf glibc-*.tar.xz -C /tmp/ \
 
 # configure glibc
 
-ADD config/nsswitch.conf /etc/nsswitch.conf
-ADD config/ld.so.conf /etc/ld.so.conf
 RUN ["/bin/bash", "+h", "-c", "mkdir -pv /etc/ld.so.conf.d"]
 
 # tzdata
@@ -331,21 +329,16 @@ RUN rm -f /usr/lib/lib{bfd,opcodes}.a \
     && rm -f /usr/lib/libz.a
 
 RUN rm -rf /usr/lib/*.a
-
 RUN rm -rf /usr/include/*
-
 RUN rm -rf /usr/share/doc/*
-
 RUN rm -rf /usr/share/man/*
 
 # strip binaries
 
 RUN ["/tools/bin/bash", "-c", "/tools/bin/find /usr/lib -type f -name *.a \
    -exec /tools/bin/strip --strip-debug {} ';'"]
-
 RUN ["/tools/bin/bash", "-c", "/tools/bin/find /lib /usr/lib -type f -name *.so* \
    -exec /tools/bin/strip --strip-unneeded {} ';'"]
-
 RUN ["/tools/bin/bash", "-c", "/tools/bin/find /{bin,sbin} /usr/{bin,sbin,libexec} -type f \
     -exec /tools/bin/strip --strip-all {} ';'"]
 
@@ -364,14 +357,8 @@ RUN rm -rf /tools
 
 # system configuration
 
-ADD config/init /init
-ADD config/init2 /init2
-ADD config/fstab /etc/fstab
-ADD config/os-release /etc/os-release
+COPY rootfs /
 
 RUN echo root:root | chpasswd
-
-ADD cgroupfs-mount /sbin/cgroupfs-mount
-RUN chmod a+x /sbin/cgroupfs-mount
 
 RUN depmod -a `ls /lib/modules | head -n 1`
