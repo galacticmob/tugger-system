@@ -48,16 +48,29 @@ udevsettle:
     requires: udevtrigger
     provides: devices
 
-tty2:
+greeter:
     type: daemon
-    exec: "/sbin/getty 38400 tty2"
+    exec: "/usr/bin/openvt -c 2 -sw /usr/bin/login-greeter"
     restart_limit: -1
     requires: devices
 
-tty3:
-    type: daemon
-    exec: "/sbin/getty 38400 tty3"
-    restart_limit: -1
+network:
+    type: shell
+    script: |
+        if [ "$METHOD" = "dhcp" ]; then
+            /sbin/udhcpc -i $NETDEV -p /var/run/udhcpc.$NETDEV.pid
+        elif [ "$METHOD" = "static" ]; then
+            ip link set dev $NETDEV up
+            ip addr add $ADDRESS/$PREFIX dev $NETDEV
+            ip route add default via $ROUTER dev $NETDEV
+        fi
+    restart_limit: 1
+    env:
+        NETDEV: ens3
+        METHOD: dhcp
+        ADDRESS: false
+        PREFIX: false
+        ROUTER: false
     requires: devices
 
 dockerd:
@@ -66,3 +79,10 @@ dockerd:
     requires: cgroups, devices
     env:
         DOCKER_RAMDISK: true
+
+tugger-service:
+    type: daemon
+    exec: "/usr/bin/tugger-service"
+    requires: network
+    env:
+        TUGGER_API_KEY: changeme

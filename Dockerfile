@@ -363,11 +363,15 @@ RUN tar -xf v2_9_0.tar.gz -C /tmp/ \
 
 # init system
 
-RUN npm install -g init8js@0.0.2
+RUN npm install -g init8js@0.0.5
 
 # the example API middleware
 
 RUN npm install -g tugger-service@0.0.2
+
+# use the tugger greeter
+
+RUN npm install -g tugger-greeter@0.0.4
 
 # cleaning up the image
 
@@ -383,6 +387,8 @@ RUN rm -rf /usr/lib/*.a
 RUN rm -rf /usr/include/*
 RUN rm -rf /usr/share/doc/*
 RUN rm -rf /usr/share/man/*
+
+RUN rm -rf /root/.npm
 
 # strip binaries
 
