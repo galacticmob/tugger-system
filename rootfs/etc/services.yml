@@ -54,6 +54,11 @@ greeter:
     restart_limit: -1
     requires: devices
 
+localstorage:
+    type: shell
+    exec: "/bin/preplocalstorage"
+    requires: devices
+
 network:
     type: shell
     script: |

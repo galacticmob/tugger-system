@@ -1,0 +1,84 @@
+#!/bin/sh
+
+# This is the script that prepares any local storage
+# It is most likely destructive
+# Based on the boot2docker automount script and is licensed under the Apache version 2.0 License
+# https://github.com/boot2docker/boot2docker/blob/master/rootfs/rootfs/etc/rc.d/automount
+
+LABEL=tugger-data
+
+# There is no magic string in this script, we will format any hard drive if asked - be warned!
+# check kernel argument for MAGICFORMAT
+# this isn't base64 encoded into the init.yml because it should be visible to the naked eye
+MAGICFORMAT=0
+cat /proc/cmdline | grep MAGICFORMAT
+if [ $? -eq 1 ]; then
+	echo "MAGICFORMAT not specified on kernel arguments, will not format anything!"
+else
+	echo "MAGICFORMAT enabled"
+	MAGICFORMAT=1
+fi
+
+# check first for a partition with the label we want
+DATADRIVE=`blkid | grep $LABEL | awk '{print $1}' | tr -d ':'`
+
+if [ ! -n "$DATADRIVE" ]; then
+	echo "There is no existing data drive."
+	if [ $MAGICFORMAT -eq 0 ]; then
+		echo "We are not going to format one."
+		echo "Exiting..."
+		exit 1
+	else
+		# look for and format a drive
+		# list drives by size and find largest one
+		echo "Looking for drive candidate"
+		bestsize=`fdisk -l | grep Disk | grep bytes | awk '{print $5}' | sort -nr | head -n 1`
+		if [ ! -n "$bestsize" ]; then
+			echo "There is no drive candidate"
+			echo "Exiting..."
+			exit 1
+		else
+			echo "Found candidate drive of size $bestsize"
+			drive=`fdisk -l | grep $bestsize`
+			device=`echo "$drive" | awk '{print $2}' | tr -d ':'`
+			echo $device
+			if [ ! -n "$device" ]; then
+				echo "Found candidate but could not determine device name"
+				echo "Exiting..."
+				exit 1
+			fi
+			# erase parition table
+			dd if=/dev/zero of=$device bs=512 count=1 conv=notrunc
+			# create swap partition
+			(echo n; echo p; echo 2; echo ; echo +8000M ; echo w) | fdisk $device
+			#partprobe
+			(echo t; echo 82; echo w) | fdisk $device
+			#partprobe
+			# wait for the partition to actually exist, timeout after about 5 seconds
+			local timer=0
+            while [ "$timer" -lt 10 -a ! -b "${device}2" ]; do
+                timer=$((timer + 1))
+                sleep 0.5
+            done
+			mkswap ${device}2
+			# create data parition
+			(echo n; echo p; echo 1; echo ; echo ; echo w) | fdisk $device
+			#partprobe
+			# wait for the partition to actually exist, timeout after about 5 seconds
+			local timer=0
+            while [ "$timer" -lt 10 -a ! -b "${device}1" ]; do
+                timer=$((timer + 1))
+                sleep 0.5
+            done
+			DATADRIVE=`echo ${device}1`
+			mkfs.ext4 -i 8192 -L $LABEL $DATADRIVE
+		fi
+	fi
+fi
+
+# mount the data drive
+mkdir -p /data
+mount $DATADRIVE /data
+
+# mount any swap partitions
+fdisk -l | grep swap | awk '{print $1}' | while read line; do swapon $line; done
