@@ -71,7 +71,7 @@ network:
         fi
     restart_limit: 1
     env:
-        NETDEV: ens3
+        NETDEV: eno1
         METHOD: dhcp
         ADDRESS: false
         PREFIX: false
