@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # do mounts
+mkdir -p /dev/pts
 mount proc
 mount -a
 
