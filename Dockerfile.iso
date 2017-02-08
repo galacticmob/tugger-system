@@ -1,0 +1,32 @@
+FROM debian:jessie
+
+# define the build parameters
+
+ENV http_proxy http://wwwproxy.hud.ac.uk:3128
+ENV https_proxy http://wwwproxy.hud.ac.uk:3128
+
+# install packages required
+RUN apt-get update \
+	&& apt-get install --yes --force-yes \
+	isolinux \
+	syslinux-common \
+	xorriso
+
+RUN mkdir /iso_build
+
+# make the iso
+WORKDIR /iso_build
+ADD vmlinuz vmlinuz
+ADD initramfs.xz initramfs.xz
+RUN mkdir isolinux
+ADD isolinux.cfg isolinux/isolinux.cfg
+RUN cp /usr/lib/ISOLINUX/isolinux.bin isolinux/isolinux.bin
+RUN cp /usr/lib/syslinux/modules/bios/ldlinux.c32 isolinux/ldlinux.c32
+RUN xorriso \
+	-as mkisofs \
+	-l -J -R -no-emul-boot -boot-load-size 4 -boot-info-table \
+	-b isolinux/isolinux.bin -c isolinux/boot.cat \
+	-o /tmp/tugger.iso .
+
+# output the iso
+CMD ["cat", "/tmp/tugger.iso"]

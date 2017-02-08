@@ -17,3 +17,6 @@ find | ( set -x; cpio -o -H newc | xz -9 --format=lzma --verbose --verbose ) > .
 cd ..
 rm -rf extract-fs
 rm fs.tar
+
+docker build -t lfs-iso -f Dockerfile.iso .
+docker run --rm lfs-iso > tugger.iso
