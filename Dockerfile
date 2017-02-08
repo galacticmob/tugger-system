@@ -252,6 +252,12 @@ RUN gunzip docker-*.tgz \
     && mv /tmp/docker/docker* /usr/bin/ \
     && rm -rf /tmp/docker
 
+# ca-certificates (required for docker registry with ssl)
+
+RUN cp cacert.pem /etc/ssl/certs/
+RUN cat /etc/ssl/certs/*.pem > /etc/ssl/certs/ca-certificates.crt \
+    && sed -i -r '/^#.+/d' /etc/ssl/certs/ca-certificates.crt
+
 # kmod (busybox modutils will not load lustre correctly)
 
 RUN tar -xf kmod-*.tar.xz -C /tmp/ \
