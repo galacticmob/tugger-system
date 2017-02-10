@@ -369,7 +369,7 @@ RUN tar -xf v2_9_0.tar.gz -C /tmp/ \
 
 # init system
 
-RUN npm install -g init8js@0.0.5
+RUN npm install -g init8js@0.0.7
 
 # the example API middleware
 
