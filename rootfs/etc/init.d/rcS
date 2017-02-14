@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# for now we run through busybox's init
+# because init8js does not support zombie reaping yet
+
+/usr/bin/init8js `cat /proc/cmdline` &

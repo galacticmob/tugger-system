@@ -11,4 +11,5 @@ mount -a
 ip link set dev lo up
 
 # make sure we pass kargs to init
-exec /usr/bin/init8js `cat /proc/cmdline`
+#exec /usr/bin/init8js `cat /proc/cmdline`
+exec /sbin/init

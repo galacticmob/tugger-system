@@ -48,12 +48,6 @@ udevsettle:
     requires: udevtrigger
     provides: devices
 
-greeter:
-    type: daemon
-    exec: "/usr/bin/openvt -c 2 -sw /usr/bin/login-greeter"
-    restart_limit: -1
-    requires: devices
-
 localstorage:
     type: shell
     exec: "/bin/preplocalstorage"
