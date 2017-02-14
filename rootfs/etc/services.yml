@@ -85,3 +85,8 @@ tugger-service:
     requires: network
     env:
         TUGGER_API_KEY: changeme
+
+networktime:
+    type: daemon
+    exec: "/usr/sbin/ntpd -d"
+    requires: network

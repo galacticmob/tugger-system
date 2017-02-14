@@ -367,6 +367,19 @@ RUN tar -xf v2_9_0.tar.gz -C /tmp/ \
     && cd /tmp \
     && rm -rf /tmp/lustre-*
 
+# ntp daemon
+
+RUN tar -xf ntp-*.tar.gz -C /tmp/ \
+    && cd /tmp/ntp-* \
+    && ./configure --prefix=/usr \
+        --bindir=/usr/sbin \
+        --sysconfdir=/etc \
+        --docdir=/usr/share/doc/ntp-4.2.8p9 \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/ntp-*
+
 # init system
 
 RUN npm install -g init8js@0.0.7
