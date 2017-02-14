@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# do mounts
-mkdir -p /dev/pts
+# do some mounts early
+mount -t devtmpfs none /dev
+mkdir /dev/pts
+mkdir /dev/shm
 mount proc
 mount -a
 
