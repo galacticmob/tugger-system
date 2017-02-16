@@ -90,5 +90,5 @@ tugger-service:
 
 networktime:
     type: daemon
-    exec: "/usr/sbin/ntpd -d"
+    exec: "/usr/sbin/ntpd -dg"
     requires: network
