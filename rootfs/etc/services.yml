@@ -56,6 +56,7 @@ localstorage:
 network:
     type: shell
     script: |
+        sleep $DELAY
         if [ "$METHOD" = "dhcp" ]; then
             /sbin/udhcpc -i $NETDEV -p /var/run/udhcpc.$NETDEV.pid
         elif [ "$METHOD" = "static" ]; then
@@ -70,6 +71,7 @@ network:
         ADDRESS: false
         PREFIX: false
         ROUTER: false
+        DELAY: 0
     requires: devices
 
 dockerd:
