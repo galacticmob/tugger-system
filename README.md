@@ -28,4 +28,6 @@ You need to build the toolchain first (link at the top).
 
 Then, populate the sources directory by downloading all the files in `wget-list`.
 
+Place any firmware files to be included in the firmware directory (most firmware can be found in the [linux-firmware](http://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/tree/) repository).
+
 Finally, run `build.sh`. The container's filesystem itself is the final initramfs image. This script will dump it, extract the kernel and create the `initramfs.xz` file.
