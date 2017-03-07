@@ -99,6 +99,11 @@ tty2:
     restart_limit: -1
     requires: devices
 
+chvt2:
+    type: shell
+    exec: chvt 2
+    requires: tty2
+
 tty3:
     type: daemon
     exec: "/sbin/getty 38400 tty3"
