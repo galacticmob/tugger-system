@@ -434,3 +434,8 @@ COPY rootfs /
 RUN echo root:root | chpasswd
 
 RUN depmod -a `ls /lib/modules | head -n 1`
+
+# add firmware files
+
+RUN mkdir -p /lib/firmware
+COPY firmware /lib/firmware/

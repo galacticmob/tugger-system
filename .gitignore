@@ -4,3 +4,4 @@ tugger.iso
 sources/*.*
 rootfs/etc/os-release
 rootfs/etc/issue
+firmware/*.*
