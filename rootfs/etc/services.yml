@@ -92,3 +92,15 @@ networktime:
     type: daemon
     exec: "/usr/sbin/ntpd -dg"
     requires: network
+
+tty2:
+    type: daemon
+    exec: "/sbin/getty 38400 tty2"
+    restart_limit: -1
+    requires: devices
+
+tty3:
+    type: daemon
+    exec: "/sbin/getty 38400 tty3"
+    restart_limit: -1
+    requires: devices

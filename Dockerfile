@@ -388,10 +388,6 @@ RUN npm install -g init8js@0.0.7
 
 RUN npm install -g tugger-service@0.0.2
 
-# use the tugger greeter
-
-RUN npm install -g tugger-greeter@0.0.7
-
 # cleaning up the image
 
 RUN rm -f /usr/lib/lib{bfd,opcodes}.a \
