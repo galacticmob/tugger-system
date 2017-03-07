@@ -2,7 +2,7 @@
 # Build script for the tugger-system
 
 # This script will:
-# - update the os-release with the current info from git
+# - update the os-release and issue files with the current info from git
 # - build the system container (make sure you built toolchain first)
 # - build the iso image
 
@@ -19,6 +19,9 @@ echo "VERSION=git-${commit}" >> rootfs/etc/os-release
 echo "ID=tugger" >> rootfs/etc/os-release
 echo "VERSION_ID=git-${commit}" >> rootfs/etc/os-release
 echo "PRETTY_NAME=tugger OS git-${commit}" >> rootfs/etc/os-release
+
+# create /etc/issue also
+echo "tugger OS git-${commit}" >> rootfs/etc/issue
 
 # build the system container
 docker build -t lfs-system .
