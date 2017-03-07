@@ -14,14 +14,18 @@ fi
 
 # get the git version info and create a new os-release file
 commit="`git log --pretty=format:'%h' -n 1`"
-echo "NAME=tugger" > rootfs/etc/os-release
-echo "VERSION=git-${commit}" >> rootfs/etc/os-release
-echo "ID=tugger" >> rootfs/etc/os-release
-echo "VERSION_ID=git-${commit}" >> rootfs/etc/os-release
-echo "PRETTY_NAME=tugger OS git-${commit}" >> rootfs/etc/os-release
+if [ ! -f rootfs/etc/os-release ]; then
+	echo "NAME=tugger" > rootfs/etc/os-release
+	echo "VERSION=git-${commit}" >> rootfs/etc/os-release
+	echo "ID=tugger" >> rootfs/etc/os-release
+	echo "VERSION_ID=git-${commit}" >> rootfs/etc/os-release
+	echo "PRETTY_NAME=tugger OS git-${commit}" >> rootfs/etc/os-release
+fi
 
 # create /etc/issue also
-echo "tugger OS git-${commit}" >> rootfs/etc/issue
+if [ ! -f rootfs/etc/issue ]; then
+	echo "tugger OS git-${commit}" >> rootfs/etc/issue
+fi
 
 # build the system container
 docker build -t lfs-system .
