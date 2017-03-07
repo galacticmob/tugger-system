@@ -380,6 +380,15 @@ RUN tar -xf ntp-*.tar.gz -C /tmp/ \
     && cd /tmp \
     && rm -rf /tmp/ntp-*
 
+# ethtool
+RUN tar -xf ethtool-*.tar.gz -C /tmp/ \
+    && cd /tmp/ethtool-* \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/ethtool-*
+
 # init system
 
 RUN npm install -g init8js@0.0.7
