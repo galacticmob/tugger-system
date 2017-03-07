@@ -14,16 +14,20 @@ fi
 
 # get the git version info and create a new os-release file
 commit="`git log --pretty=format:'%h' -n 1`"
+CREATED_OSRELEASE=0
 if [ ! -f rootfs/etc/os-release ]; then
+	CREATED_OSRELEASE=1
 	echo "NAME=tugger" > rootfs/etc/os-release
 	echo "VERSION=git-${commit}" >> rootfs/etc/os-release
 	echo "ID=tugger" >> rootfs/etc/os-release
 	echo "VERSION_ID=git-${commit}" >> rootfs/etc/os-release
-	echo "PRETTY_NAME=tugger OS git-${commit}" >> rootfs/etc/os-release
+	echo "PRETTY_NAME=\"tugger OS git-${commit}\"" >> rootfs/etc/os-release
 fi
 
 # create /etc/issue also
+CREATED_ISSUE=0
 if [ ! -f rootfs/etc/issue ]; then
+	CREATED_ISSUE=1
 	echo "tugger OS git-${commit}" >> rootfs/etc/issue
 fi
 
@@ -51,3 +55,11 @@ rm fs.tar
 # build the ISO container and dump the iso
 docker build -t lfs-iso -f Dockerfile.iso .
 docker run --rm lfs-iso > tugger.iso
+
+# clean up auto generated files
+if [ $CREATED_OSRELEASE -eq 1 ]; then
+	rm rootfs/etc/os-release
+fi
+if [ $CREATED_ISSUE -eq 1 ]; then
+	rm rootfs/etc/issue
+fi
