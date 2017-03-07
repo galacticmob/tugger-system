@@ -1,5 +1,5 @@
 NAME=tugger
-VERSION="1 (Anomalous Materials)"
+VERSION="1"
 ID=tugger
 VERSION_ID=1
-PRETTY_NAME="tugger v1 (Anomalous Materials)"
+PRETTY_NAME=""
