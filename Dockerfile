@@ -391,7 +391,7 @@ RUN tar -xf ethtool-*.tar.gz -C /tmp/ \
 
 # init system
 
-RUN npm install -g init8js@0.0.7
+RUN npm install -g init8js@0.0.8
 
 # the example API middleware
 

@@ -15,7 +15,7 @@ Node.js is included as a convienient framework for building an API using web tec
 
 Distinguishing features:
 
-- longterm kernel (currently 4.4.47)
+- longterm kernel
 - Docker Engine
 - Node.js
 - Lustre parallel filesystem client
