@@ -391,11 +391,11 @@ RUN tar -xf ethtool-*.tar.gz -C /tmp/ \
 
 # init system
 
-RUN npm install -g init8js@0.0.8
+RUN npm install --production -g init8js@0.0.10
 
 # the example API middleware
 
-RUN npm install -g tugger-service@0.0.2
+RUN npm install --production -g tugger-service@0.0.2
 
 # cleaning up the image
 
