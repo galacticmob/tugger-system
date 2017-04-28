@@ -63,6 +63,7 @@ network:
             ip link set dev $NETDEV up
             ip addr add $ADDRESS/$PREFIX dev $NETDEV
             ip route add default via $ROUTER dev $NETDEV
+            echo $ADDRESS > /tmp/ip
         fi
     restart_limit: 1
     env:
