@@ -392,6 +392,8 @@ RUN tar -xf ethtool-*.tar.gz -C /tmp/ \
 # e2fsprogs
 RUN tar -xf e2fsprogs-*.tar.gz -C /tmp/ \
     && cd /tmp/e2fsprogs-* \
+    && mkdir -v build \
+    && cd build \
     && LIBS=-L/tools/lib \
     CFLAGS=-I/tools/include \
     PKG_CONFIG_PATH=/tools/lib/pkgconfig \
