@@ -389,6 +389,23 @@ RUN tar -xf ethtool-*.tar.gz -C /tmp/ \
     && cd /tmp \
     && rm -rf /tmp/ethtool-*
 
+# e2fsprogs
+RUN tar -xf e2fsprogs-*.tar.gz -C /tmp/ \
+    && cd /tmp/e2fsprogs-* \
+    && LIBS=-L/tools/lib \
+    CFLAGS=-I/tools/include \
+    PKG_CONFIG_PATH=/tools/lib/pkgconfig \
+    ../configure --prefix=/usr \
+                 --bindir=/bin \
+                 --with-root-prefix="" \
+                 --enable-elf-shlibs \
+    && make \
+    && make install \
+    && make install-libs \
+    && chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a \
+    && cd /tmp \
+    && rm -rf /tmp/e2fsprogs-*
+
 # init system
 
 RUN npm install --production -g init8js@0.0.10
