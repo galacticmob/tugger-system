@@ -394,17 +394,13 @@ RUN tar -xf e2fsprogs-*.tar.gz -C /tmp/ \
     && cd /tmp/e2fsprogs-* \
     && mkdir -v build \
     && cd build \
-    && LIBS=-L/tools/lib \
-    CFLAGS=-I/tools/include \
-    PKG_CONFIG_PATH=/tools/lib/pkgconfig \
-    ../configure --prefix=/usr \
+    && ../configure --prefix=/usr \
                  --bindir=/bin \
                  --with-root-prefix="" \
                  --enable-elf-shlibs \
     && make \
     && make install \
     && make install-libs \
-    && chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a \
     && cd /tmp \
     && rm -rf /tmp/e2fsprogs-*
 
