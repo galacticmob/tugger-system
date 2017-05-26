@@ -12,14 +12,15 @@ It typically does not require installation and runs completely from RAM.
 
 It provides only a container runtime and basic system initialisation services. It does not provide any management middleware, instead, you are expected to roll your own. 
 Node.js is included as a convienient framework for building an API using web technologies (an example is available here [tugger-service](https://github.com/kxes/tugger-service)).
+Fluent Bit is included to centralise logging and metric collection, avoiding exhausting memory when running from a ram disk.
 
-Distinguishing features:
+The default build system includes:
 
 - longterm kernel
 - Docker Engine
 - Node.js
-- Lustre parallel filesystem client
-- < 40MB compressed
+- Fluent Bit
+- < 50MB compressed
 - full source and easy to understand toolchain
 
 ## building it
