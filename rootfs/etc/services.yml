@@ -56,11 +56,12 @@ localstorage:
 network:
     type: shell
     script: |
-        sleep $DELAY
         if [ "$METHOD" = "dhcp" ]; then
+            sleep $DELAY
             /sbin/udhcpc -i $NETDEV -p /var/run/udhcpc.$NETDEV.pid
         elif [ "$METHOD" = "static" ]; then
             ip link set dev $NETDEV up
+            sleep $DELAY
             ip addr add $ADDRESS/$PREFIX dev $NETDEV
             ip route add default via $ROUTER dev $NETDEV
             echo $ADDRESS > /tmp/ip
