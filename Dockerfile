@@ -404,6 +404,32 @@ RUN tar -xf e2fsprogs-*.tar.gz -C /tmp/ \
     && cd /tmp \
     && rm -rf /tmp/e2fsprogs-*
 
+# cmake for fluent-bit
+RUN tar -xf cmake-*.tar.gz -C /tmp/ \
+    && cd /tmp/cmake-* \
+    && sed -i '/CMAKE_USE_LIBUV 1/s/1/0/' CMakeLists.txt \
+    && sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake \
+    && ./bootstrap --prefix=/tools \
+        --mandir=/tools/share/man \
+        --no-system-jsoncpp \
+        --no-system-librhash \
+        --docdir=/tools/share/doc/cmake \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/cmake-*
+
+# fluent-bit
+RUN tar -xf v0.11.6.tar.gz -C /tmp/ \
+    && cd /tmp/fluent-bit-* \
+    && mkdir -p build \
+    && cd build \
+    && cmake ../ \
+    && make \
+    && make install \
+    && cd /tmp \
+    && rm -rf /tmp/fluent-bit-*
+
 # init system
 
 RUN npm install --production -g init8js@0.0.10
