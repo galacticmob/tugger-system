@@ -432,7 +432,7 @@ RUN tar -xf v0.11.6.tar.gz -C /tmp/ \
 
 # init system
 
-RUN npm install --production -g init8js@0.0.10
+RUN npm install --production -g init8js@0.0.13
 
 # the example API middleware
 
