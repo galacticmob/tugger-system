@@ -436,7 +436,7 @@ RUN npm install --production -g init8js@0.0.14
 
 # the example API middleware
 
-RUN npm install --production -g tugger-service@0.0.2
+RUN npm install --production -g tugger-service@0.0.4
 
 # cleaning up the image
 
