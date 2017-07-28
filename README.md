@@ -6,13 +6,13 @@ Precompiled ISO, kernel and intiramfs are available on the releases page. You pr
 
 ## what is tugger
 
-`tugger` is a very small and very fast Linux distribution intended to be used as a base to build your PDA ROM or bare metal OS.
+`tugger` is a very small and very fast OS intended to be used as a base to build Galaxy.PRC
 
-It typically does not require installation and runs completely from RAM.
+It typically installs in seconds and runs completely from RAM.
 
 It provides only a container runtime and basic system initialisation services. It does not provide any management middleware, instead, you are expected to roll your own. 
 Node.js is included as a convienient framework for building an API using web technologies (an example is available here [tugger-service](https://github.com/kxes/tugger-service)).
-Fluent Bit is included to centralise logging and metric collection, avoiding exhausting memory when running from a ram disk.
+Fluent Bit is included to centralise logging and metric collection, avoiding exhausting memory when running from VFS.
 
 The default build system includes:
 
