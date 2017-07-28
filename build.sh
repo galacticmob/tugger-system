@@ -43,8 +43,8 @@ cid="`docker run -d lfs-system /bin/true`"
 docker export --output="fs.tar" $cid
 docker rm $cid
 
-# extract the archive and create the initrd.xz
-echo "Extract archive and create initrd.xz"
+# extract the archive and create the initrd.bin
+echo "Extract archive and create initrd.bin"
 mkdir extract-fs
 cd extract-fs/
 tar xf ../fs.tar
@@ -53,6 +53,7 @@ mknod -m 622 dev/console c 5 1
 mknod -m 622 dev/tty0 c 4 0
 mv vmlinuz ..
 find | ( set -x; cpio -o -H newc | xz -9 --format=lzma --verbose --verbose ) > ../initramfs.xz
+mv initramfs.xz initramfs.bin
 cd ..
 rm -rf extract-fs
 rm fs.tar
@@ -60,7 +61,7 @@ rm fs.tar
 # build the ISO container and dump the iso
 echo "Building ISO container"
 docker build -t lfs-iso -f Dockerfile.iso .
-docker run --rm lfs-iso > tugger.iso
+docker run --rm lfs-iso > tugger.bin
 
 # clean up auto generated files
 echo "Cleaning up"
