@@ -6,7 +6,7 @@ Precompiled ISO, kernel and intiramfs are available on the releases page. You pr
 
 ## what is tugger
 
-`tugger` is a very small and very fast Linux distribution intended to be used as a base to build your data centre or HPC bare metal OS.
+`tugger` is a very small and very fast Linux distribution intended to be used as a base to build your PDA ROM or bare metal OS.
 
 It typically does not require installation and runs completely from RAM.
 
