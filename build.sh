@@ -6,6 +6,23 @@
 # - build the system container (make sure you built toolchain first)
 # - build the iso image
 
+# Define functions
+function jumpto
+{
+    label=$1
+    cmd=$(sed -n "/$label:/{:a;n;p;ba};" $0 | grep -v ':$')
+    eval "$cmd"
+    exit
+}
+
+function makeiso 
+{
+    echo "Building ISO container"
+    docker build -t lfs-iso -f Dockerfile.iso .
+    docker run --rm lfs-iso > tugger.iso
+    jumpto isoend
+}
+
 # check we are running as root
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
@@ -59,9 +76,10 @@ rm -rf extract-fs
 rm fs.tar
 
 # build the ISO container and dump the iso
-echo "Building ISO container"
-docker build -t lfs-iso -f Dockerfile.iso .
-docker run --rm lfs-iso > tugger.bin
+if [ "$1" != "-iso" ]; then
+  makeiso;
+fi
+isoend:
 
 # clean up auto generated files
 echo "Cleaning up"
